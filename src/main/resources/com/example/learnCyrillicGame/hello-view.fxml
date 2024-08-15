@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.example.learnCyrillicGame.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+
+    </padding>
+
+    <Label fx:id="welcomeText" />
+    <Button fx:id="button" onAction="#onHelloButtonClick" text="Hello!" />
+    <Button fx:id="button2" onAction="#onHelloButtonClick2" text="Hello!" />
+    <Button fx:id="button3" onAction="#onHelloButtonClick2" text="Hello!" />
+    <Button fx:id="button4" onAction="#onHelloButtonClick2" text="Hello!" />
+
+</VBox>
