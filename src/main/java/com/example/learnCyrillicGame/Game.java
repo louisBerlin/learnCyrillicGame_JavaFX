@@ -68,39 +68,39 @@ public class Game {
 
     List<String> cyrillicAnswer = new ArrayList<String>(){{
 
-        add("a // father, large ");
-        add("b // bad, big, bed ");
-        add("v // water, while ");
-        add("h // neighbourhood, hello ");
-        add( "g // egg, gold ");
-        add( "d // dog, doing ");
-        add(  "e // bed ");
-        add( "ye, ie // yellow, yes, yet ");
-        add( "zh // pleasure, vision ");
-        add( "z // zoo ");
-        add( "y // mitt ");
-        add( "i // meet ");
-        add("yi, i // yeast ");
-        add("y, i // boy, toy ");
-        add("k // cat, king ");
-        add("l // like ");
-        add("m // my ");
-        add("n // never ");
-        add("o // long, more ");
-        add("p // people ");
-        add("r // rolled r, Italian terra ");
-        add("s // sea, so ");
-        add("t // star, top ");
-        add("u // boot ");
-        add("f // fight ");
-        add("kh // ugh ");
-        add("ts // sits ");
-        add("ch // chat, check ");
-        add("sh // shoes ");
-        add("shch // fresh cherries ");
+        add("-a- // a // father, large ");
+        add("-bè- // b // bad, big, bed ");
+        add("-vè- // v // water, while ");
+        add("-hé- // h // neighbourhood, hello ");
+        add( "-gé- // g // egg, gold ");
+        add( "-dè- // d // dog, doing ");
+        add(  "-è- // e // bed ");
+        add( "-yea- // ye, ie // yellow, yes, yet ");
+        add( " -j'ai- // zh // pleasure, vision ");
+        add( "-zè // z // zoo ");
+        add( "-y- // y // mitt ");
+        add( "-i- // i // meet ");
+        add("-ii or ye- // yi, i // yeast ");
+        add("-ij-eu- // y, i // boy, toy ");
+        add("-ka- // k // cat, king ");
+        add("-l- l // like ");
+        add("-m- // m // my ");
+        add("-n- // n // never ");
+        add("-o- // o // long, more ");
+        add("-pè- // p // people ");
+        add("-r- // r // rolled r, Italian terra ");
+        add("-s- // s // sea, so ");
+        add("-t- // t // star, top ");
+        add("-ou- // u // boot ");
+        add("-f- // f // fight ");
+        add("-ha- // kh // ugh ");
+        add("-tzè- // ts // sits ");
+        add("-tchè- // ch // chat, check ");
+        add("-sh- // sh // shoes ");
+        add("-ch- shch // fresh cherries ");
         add("ʹ // silent, palatalizes a consonant ");
-        add("yu, iu // use ");
-        add("ya, ia // yard ");
+        add("-you- // yu, iu // use ");
+        add("-ja- // ya, ia // yard ");
         add("ʺ // silent, prevents palatalization ");
 
 
@@ -108,7 +108,11 @@ public class Game {
 
     public void render(GraphicsContext gc){
 
-        gc.setFill(Color.WHITE);
+        gc.setFill(Color.BISQUE);
+
+        gc.fillRect(0, 0, 600, 120);
+
+        gc.setFill(Color.BLACK);
         gc.setFont(Font.font ("Verdana", 100));
         gc.fillText(cyrillicAlphabet.get(currentLetter), 220, 100);
 
@@ -120,16 +124,20 @@ public class Game {
         // 3 question box
 
         gc.setFill(Color.BEIGE);
-        gc.setFont(Font.font ("Verdana", 20));
+        gc.setStroke(Color.ALICEBLUE);
+        gc.setLineWidth(10);
 
-        gc.fillRect(10, 150, 100, 100);
+        gc.setFont(Font.font ("Verdana", 30));
+
+        gc.strokeRect(10, 150, 100, 100);
         gc.fillText("<-- "+cyrillicAnswer.get(answers.get(0)), 120, 200);
 
-        gc.fillRect(10, 300, 100, 100);
+        gc.strokeRect(10, 300, 100, 100);
         gc.fillText("<-- "+cyrillicAnswer.get(answers.get(1)), 120, 350);
 
-        gc.fillRect(10, 450, 100, 100);
+        gc.strokeRect(10, 450, 100, 100);
         gc.fillText("<-- "+cyrillicAnswer.get(answers.get(2)), 120, 500);
+
 
 
 
@@ -147,48 +155,38 @@ public class Game {
     }
 
 
-    public void checkCollisionRect(Player player){
+    public void checkCollisionRect(Player player) {
 
-        if(collisionBetweenRectangles(player, 10, 150, 100, 100)){
-            if(answers.get(0) == currentLetter){
-                points++;
-                newCurrentLetter();
-                player.setX(500);
-                player.setY(500);
-            }
-            else{
-                points = 0;
-                player.setX(500);
-                player.setY(500);
-            }
-        }
-        if(collisionBetweenRectangles(player, 10, 300, 100, 100)){
-            if(answers.get(1) == currentLetter){
-                points++;
-                newCurrentLetter();
-                player.setX(500);
-                player.setY(500);
-            }
-            else{
-                points = 0;
-                player.setX(500);
-                player.setY(500);
-            }
-        }
-        if(collisionBetweenRectangles(player, 10, 450, 100, 100)){
-            if(answers.get(2) == currentLetter){
-                points++;
-                newCurrentLetter();
-                player.setX(500);
-                player.setY(500);
-            }
-            else{
-                points = 0;
-                player.setX(500);
-                player.setY(500);
-            }
-        }
+        if (collisionBetweenRectangles(player, 10, 150, 100, 100)) {
 
+                answersReaction(answers.get(0) == currentLetter, player);
+
+        }
+        if (collisionBetweenRectangles(player, 10, 300, 100, 100)) {
+
+                answersReaction(answers.get(1) == currentLetter, player);
+            }
+
+        if (collisionBetweenRectangles(player, 10, 450, 100, 100)) {
+
+                answersReaction(answers.get(2) == currentLetter, player);
+
+
+        }
+    }
+
+    private void answersReaction(boolean isCorrect, Player player){
+        if(isCorrect){
+            points++;
+            newCurrentLetter();
+            player.setX(450);
+            player.setY(300);
+        }
+        else{
+            points = 0;
+            player.setX(450);
+            player.setY(300);
+        }
     }
 
 

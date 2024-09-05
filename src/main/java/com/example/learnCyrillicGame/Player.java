@@ -37,6 +37,7 @@ public class Player {
 
         public void setX(int x) {
             this.x = x;
+            checkBorders();
         }
 
         public int getY() {
@@ -45,6 +46,7 @@ public class Player {
 
         public void setY(int y) {
             this.y = y;
+            checkBorders();
         }
 
         public String getText() {
@@ -67,10 +69,29 @@ public class Player {
 
         gc.fillOval(this.x+10, this.y+40, 80, 80);
         gc.setGlobalAlpha(1);
-        gc.drawImage(imageSprite, 460.25*animationFrame,600*direction,460.25,600,this.x,this.y,100,100);
+        gc.drawImage(imageSprite, 460.25*animationFrame,610*direction,460.25,600,this.x,this.y,100,100);
 
 
         }
+
+
+        public void checkBorders(){
+            if(this.x < 0){
+                this.x = 0;
+            }
+            if(this.x > 500){
+                this.x =500;
+            }
+            if(this.y < 0){
+                this.y = 0;
+            }
+            if(this.y > 600){
+                this.y = 600;
+            }
+        }
+
+
+
 
 
 

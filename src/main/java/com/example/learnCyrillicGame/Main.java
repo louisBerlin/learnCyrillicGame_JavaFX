@@ -95,8 +95,10 @@ public class Main extends Application {
 
 
 
-         player = new Player(10, 10, "Ф ф");
-        stage.setTitle( animationFrame + "THE cyrillic game !!!!! (win the louisAward 2024)");
+         player = new Player(450, 300, "Ф ф");
+         direction = 2;
+
+         stage.setTitle( animationFrame + "THE cyrillic game !!!!! (win the louisAward 2024)");
         StackPane pane = new StackPane();
         Canvas canvas = new Canvas(height, width);
         canvas.setFocusTraversable(true);
@@ -208,9 +210,9 @@ public class Main extends Application {
 
         // move player
         if(boost) {
-            speed = 4;
+            speed = 8;
         } else {
-            speed = 1;
+            speed = 4;
         }
 
         if(aIsPressed) {
@@ -242,10 +244,11 @@ public class Main extends Application {
 
         }
 
+        game.render(gc);
+
         player.render(gc,direction,animationFrame);
 
         game.checkCollisionRect(player);
-        game.render(gc);
 
 
     }
