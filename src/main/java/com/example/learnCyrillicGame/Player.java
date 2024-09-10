@@ -3,29 +3,27 @@ package com.example.learnCyrillicGame;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 public class Player {
 
      private int x;
      private int y;
-     private String text;
 
      private Boolean isMoving = false;
 
-    public Boolean getMoving() {
-        return isMoving;
-    }
 
-    public void setMoving(Boolean moving) {
+
+   public void setMoving(Boolean moving) {
         isMoving = moving;
     }
 
+
+
+
     Image imageSprite;
-        public Player(int x, int y, String text) {
+        public Player(int x, int y) {
             this.x = x;
             this.y = y;
-            this.text = text;
 
              imageSprite = new Image(getClass().getResource("sprite.png").toExternalForm());
 
@@ -49,13 +47,9 @@ public class Player {
             checkBorders();
         }
 
-        public String getText() {
-            return text;
-        }
 
-        public void setText(String text) {
-            this.text = text;
-        }
+
+
 
 
 

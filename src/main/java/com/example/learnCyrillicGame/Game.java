@@ -2,11 +2,12 @@ package com.example.learnCyrillicGame;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,11 +16,16 @@ public class Game {
     private int points = 0;
     private int currentLetter = 0;
 
-    private Rectangle rectangle1 = new Rectangle(10, 150, 100, 100);
-    private Rectangle rectangle2 = new Rectangle(10, 300, 100, 100);
-    private Rectangle rectangle3 = new Rectangle(10, 450, 100, 100);
+    private boolean animationOn = false;
+    private boolean goodAnswer = false;
+    private int squareToAnimate = 0;
 
-    private List<Integer> answers = new ArrayList<Integer>(){{
+
+    Audio audio;
+
+
+
+    private List<Integer> answers = new ArrayList<>(){{
 
         add(0);
         add(1);
@@ -27,7 +33,7 @@ public class Game {
 
     }};
 
-    List<String> cyrillicAlphabet = new ArrayList<String>(){{
+    List<String> cyrillicAlphabet = new ArrayList<>() {{
         add("А а");
         add("Б б");
         add("В в");
@@ -66,7 +72,7 @@ public class Game {
 
 
 
-    List<String> cyrillicAnswer = new ArrayList<String>(){{
+    List<String> cyrillicAnswer = new ArrayList<>(){{
 
         add("-a- // a // father, large ");
         add("-bè- // b // bad, big, bed ");
@@ -106,6 +112,11 @@ public class Game {
 
     }};
 
+
+    public Game() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+            audio = new Audio();
+    }
+
     public void render(GraphicsContext gc){
 
         gc.setFill(Color.BISQUE);
@@ -141,8 +152,13 @@ public class Game {
 
 
 
+
+
     }
 
+    public boolean isAnimationOn() {
+        return animationOn;
+    }
 
     public void newCurrentLetter(){
         currentLetter = (int)(Math.random() * cyrillicAlphabet.size());
@@ -160,33 +176,57 @@ public class Game {
         if (collisionBetweenRectangles(player, 10, 150, 100, 100)) {
 
                 answersReaction(answers.get(0) == currentLetter, player);
-
+                squareToAnimate = 0;
+                animationOn = true;
         }
+
         if (collisionBetweenRectangles(player, 10, 300, 100, 100)) {
 
                 answersReaction(answers.get(1) == currentLetter, player);
-            }
+            squareToAnimate = 1;
+            animationOn = true;
+        }
 
         if (collisionBetweenRectangles(player, 10, 450, 100, 100)) {
 
                 answersReaction(answers.get(2) == currentLetter, player);
-
-
+            squareToAnimate = 2;
+            animationOn = true;
         }
     }
 
-    private void answersReaction(boolean isCorrect, Player player){
-        if(isCorrect){
-            points++;
-            newCurrentLetter();
-            player.setX(450);
-            player.setY(300);
+
+
+    public void answerAnimation(GraphicsContext gc){
+
+
+
+        if(goodAnswer){
+
+        gc.setLineWidth(10);
+
+
+            audio.play();
+            gc.setFill(Color.GREEN);
+            gc.setStroke(Color.GREEN);
         }
-        else{
-            points = 0;
-            player.setX(450);
-            player.setY(300);
+        else {
+            audio.playLose();
+            gc.setFill(Color.RED);
+            gc.setStroke(Color.RED);
         }
+
+ if(squareToAnimate == 0){
+            gc.strokeRect(10, 150, 100, 100);
+        }
+ else if(squareToAnimate == 1){
+            gc.strokeRect(10, 300, 100, 100);
+        }
+ else if(squareToAnimate == 2){
+            gc.strokeRect(10, 450, 100, 100);
+        }
+
+
     }
 
 
@@ -195,5 +235,24 @@ public class Game {
     }
 
 
+    private void answersReaction(boolean isCorrect, Player player){
+        if(isCorrect){
 
+            goodAnswer = true;
+            points++;
+            newCurrentLetter();
+
+        }
+        else{
+            goodAnswer = false;
+            points = 0;
+        }
+        player.setX(450);
+        player.setY(300);
+    }
+
+    public void setAnimationOff() {
+        animationOn = false;
+    }
 }
+

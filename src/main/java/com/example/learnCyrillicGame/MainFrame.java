@@ -9,25 +9,25 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-
-public class Main extends Application {
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
 
 
 
-    private int height = 600;
-    private int width = 700;
+public class MainFrame extends Application {
+
+
+    final int height = 600;
+    final int width = 700;
 
     Scene scene;
-
     Player player;
-    Game game = new Game();
+    Game game  ;
+    private Timeline mainLoopTimer;
     private boolean wIsPressed = false;
     private boolean aIsPressed = false;
     private boolean sIsPressed = false;
@@ -44,101 +44,54 @@ public class Main extends Application {
 
 
 
-  /* Transition trans = new Transition() {
-        {
-            setCycleDuration(Duration.millis(1000 / 60.0));
-        }
-        @Override
-        public void interpolate(double frac)
-        {
-            if (frac != 1)
-                return;
-            //End of one cycle.
-
-                animationFrame++;
-                if (animationFrame > 3) {
-                    animationFrame = 0;
-                }
-            }
-
-
-    };
-
-   */
-
-
-
-   /* AnimationTimer animationFrameTimer = new AnimationTimer() {
-        @Override
-        public void handle(long l) {
-
-            animationFrame++;
-            if(animationFrame>3) {
-                animationFrame = 0;
-            }
-
-        }
-
-
-    };
-
-    */
-
-
     public static void main(String[] args) {
         launch(args);
     }
 
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
 
 
 
-         player = new Player(450, 300, "Ф ф");
+         game = new Game();
+         player = new Player(450, 300);
          direction = 2;
 
-         stage.setTitle( animationFrame + "THE cyrillic game !!!!! (win the louisAward 2024)");
-        StackPane pane = new StackPane();
-        Canvas canvas = new Canvas(height, width);
-        canvas.setFocusTraversable(true);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-
-        gc.strokeText("Hello, World!", 10, 10);
-        gc.fillRect(player.getX(), player.getY(), player.getX()+10, player.getY()+10);
-
-       /* AnimationTimer collisionTimer = new AnimationTimer() {
-            @Override
-            public void handle(long l) {
-
-                movePlayer(gc);
-
-            }
 
 
-        };
-
-        */
-      //  collisionTimer.start();
 
 
-        Timeline loop = new Timeline(new KeyFrame(Duration.millis(1000.0/40), e -> update(gc)));
-        loop.setCycleCount(Animation.INDEFINITE);
-        loop.play();
 
 
-        Timeline loopAnim = new Timeline(new KeyFrame(Duration.millis(1000.0/5), e -> loopAnimation()));
-        loopAnim.setCycleCount(Animation.INDEFINITE);
-        loopAnim.play();
+        stage.setTitle( "THE cyrillic game !!!!! (win the louisAward 2024)");
+         StackPane pane = new StackPane();
+         Canvas canvas = new Canvas(height, width);
+         canvas.setFocusTraversable(true);
+         GraphicsContext gc = canvas.getGraphicsContext2D();
+
+       // gc.strokeText("Hello, World!", 10, 10);
+      //  gc.fillRect(player.getX(), player.getY(), player.getX()+10, player.getY()+10);
+
+
+
+
+        mainLoopTimer = new Timeline(new KeyFrame(Duration.millis(1000.0/40), e -> mainLoop(gc)));
+        mainLoopTimer.setCycleCount(Animation.INDEFINITE);
+        mainLoopTimer.play();
+
+
+        Timeline loopPlayerAnimation = new Timeline(new KeyFrame(Duration.millis(1000.0/5), e -> loopAnimation()));
+        loopPlayerAnimation.setCycleCount(Animation.INDEFINITE);
+        loopPlayerAnimation.play();
+
 
 
 
 
         pane.getChildren().add(canvas);
+
         scene = new Scene(pane, height, width);
-
-       // trans.play();
-
         scene.setOnKeyPressed(e -> setOnKeyPressed(e));
         scene.setOnKeyReleased(e -> setOnKeyReleased(e));
 
@@ -152,31 +105,50 @@ public class Main extends Application {
         if (aIsPressed || dIsPressed || wIsPressed || sIsPressed) {
 
         animationFrame++;
+
         if (animationFrame > 3) {
             animationFrame = 0;
         }
-    }else {
+        }else {
             animationFrame = 1;
             if(direction == 2) {
                 animationFrame = 0;
             }
         }
-
     }
 
 
-
-    private void update(GraphicsContext gc) {
+private int breakTime = 0;
+    private void mainLoop(GraphicsContext gc) {
         System.out.println(animationFrame);
 
-        movePlayer(gc);
-        if (!aIsPressed && !dIsPressed && !wIsPressed && !sIsPressed) {
 
-            animationFrame = 1;
-            if (direction == 2) {
-                animationFrame = 0;
+
+        if(game.isAnimationOn()) {
+
+            System.out.println("animation on "+ breakTime);
+
+            if(breakTime == 0) {
+                game.answerAnimation(gc);
+                breakTime++;
             }
+            else if(breakTime >= 15) {
+                breakTime = 0;
+                game.setAnimationOff();
+
+            }
+            else if(breakTime >= 1) {
+                breakTime++;
+            }
+
+
+
+
+
         }
+        else     movePlayer(gc);
+
+
 
     }
 
@@ -185,12 +157,10 @@ public class Main extends Application {
     public void movePlayer(GraphicsContext gc) {
 
 
-        //get a rendom nummer between 1 and 10
-        int randomNum = 1 + (int)(Math.random() * 10);
+
         gc.clearRect(0, 0, 200, 200);
         Image image = new Image(getClass().getResource("TXGrass.png").toExternalForm(), 200, 200, false, false);
 
-        //ImagePattern imagePattern = new ImagePattern(image,100,100,100,100,true);
 
 
         // ainimation
@@ -203,10 +173,7 @@ public class Main extends Application {
             }
             axey += 100;
             axeX = 0;}
-        gc.drawImage(image, 100, 0,100,100,100,100,100,100);
 
-
-        //gc.setFill(imagePattern);
 
         // move player
         if(boost) {
@@ -255,14 +222,10 @@ public class Main extends Application {
     public void setOnKeyPressed(KeyEvent e) {
 
 
-
-
-
         if(e.getCode()== KeyCode.A) {
             System.out.println("L");
             aIsPressed = true;
             player.setMoving(true);
-
 
 
         }
@@ -294,7 +257,6 @@ public class Main extends Application {
     }
 
     public void setOnKeyReleased(KeyEvent e) {
-
 
 
         if(e.getCode()== KeyCode.A) {
