@@ -70,10 +70,6 @@ public class MainFrame extends Application {
          canvas.setFocusTraversable(true);
          GraphicsContext gc = canvas.getGraphicsContext2D();
 
-       // gc.strokeText("Hello, World!", 10, 10);
-      //  gc.fillRect(player.getX(), player.getY(), player.getX()+10, player.getY()+10);
-
-
 
 
         mainLoopTimer = new Timeline(new KeyFrame(Duration.millis(1000.0/40), e -> mainLoop(gc)));
@@ -120,13 +116,13 @@ public class MainFrame extends Application {
 
 private int breakTime = 0;
     private void mainLoop(GraphicsContext gc) {
-        System.out.println(animationFrame);
+
 
 
 
         if(game.isAnimationOn()) {
 
-            System.out.println("animation on "+ breakTime);
+
 
             if(breakTime == 0) {
                 game.answerAnimation(gc);
